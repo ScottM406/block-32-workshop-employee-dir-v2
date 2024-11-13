@@ -2,30 +2,23 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 
+app.use(express.json());
+
 app.get("/", (req, res) => {
   res.send("Hello employees!");
 });
 
-const employees = require("./employees");
+app.use("/employees", require("./api/employees.js"));
 
-app.get("/employees", (req, res) => {
-  res.json(employees);
-});
+app.use((res, req, next) => {
+  next( { status: 404, message: "Could not find that endpoint"} )
+})
 
-app.get("/employees/random", (req, res) => {
-  const i = Math.floor(Math.random() * employees.length);
-  res.json(employees[i]);
-});
-
-app.get("/employees/:id", (req, res) => {
-  const { id } = req.params;
-  const employee = employees.find((e) => e.id === +id);
-  if (employee) {
-    res.json(employee);
-  } else {
-    res.status(404).send(`There is no employee with id ${id}.`);
-  }
-});
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.status || 500);
+  res.json(err.message || "ERROR! Something went wrong. Sorry bud.")
+})
 
 app.listen(PORT, () => {
   `Listening on port ${PORT}...`;

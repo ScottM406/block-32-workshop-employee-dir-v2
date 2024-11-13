@@ -15,3 +15,30 @@ GET {{host}}/employees/123
 
 ### Get random employee
 GET {{host}}/employees/random
+
+### Invalid endpoint test
+GET {{host}}/frogs/poison-dart-frog
+
+### POST test #1
+POST {{host}}/employees
+Content-Type: application/json
+
+{
+  "employeename": "Tony Gunk"
+}
+
+### POST test #2
+POST {{host}}/employees
+Content-Type: application/json
+
+{
+  "employeename": "Janky Bob"
+}
+
+### POST failure test
+POST {{host}}/employees
+Content-Type: application/json
+
+{
+  "datehired": "10/15/2017"
+}
